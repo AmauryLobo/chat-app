@@ -3,6 +3,8 @@ import { Geist } from "next/font/google"
 import "./globals.css"
 import { SessionProvider } from "next-auth/react"
 import Link from "next/link"
+import { auth } from "@/lib/auth"
+import LogoutButton from "@/components/LogoutButton"
 
 const geist = Geist({ subsets: ["latin"] })
 
@@ -21,9 +23,12 @@ export default function RootLayout({
       <body className={geist.className}>
         <SessionProvider>
           <nav className="border-b px-6 py-3 flex gap-4 items-center">
-            <span className="font-semibold mr-4">Chat App</span>
-            <Link href="/chat" className="text-sm hover:underline">Chat</Link>
-            <Link href="/feed" className="text-sm hover:underline">Feed</Link>
+              <span className="font-semibold mr-4">Chat App</span>
+              <Link href="/chat" className="text-sm hover:underline">Chat</Link>
+              <Link href="/feed" className="text-sm hover:underline">Feed</Link>
+              <div className="ml-auto">
+                <LogoutButton />
+              </div>
           </nav>
           {children}
         </SessionProvider>

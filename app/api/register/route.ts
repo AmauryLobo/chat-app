@@ -8,13 +8,19 @@ export async function POST(req: Request) {
     console.log("body recebido:", body)
 
     const { name, email, password } = body
+      if (!name || !email || !password) {
+        return NextResponse.json(
+          { error: "Preencha todos os campos" },
+          { status: 400 }
+        )
+      }
 
-    if (!name || !email || !password) {
-      return NextResponse.json(
-        { error: "Preencha todos os campos" },
-        { status: 400 }
-      )
-    }
+      if (password.length < 6) {
+        return NextResponse.json(
+          { error: "Senha deve ter no mínimo 6 caracteres" },
+          { status: 400 }
+        )
+      }
 
     if (password.length < 6) {
       return NextResponse.json(
