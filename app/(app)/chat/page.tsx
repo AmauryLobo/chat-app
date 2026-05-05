@@ -124,6 +124,19 @@ export default function ChatPage() {
   setShowNewGroup(false)
 }
 
+  async function deleteConversation(userId: string) {
+  await fetch(`/api/messages/${userId}?type=private`, { method: "DELETE" })
+  setSelectedUser(null)
+  setMessages([])
+}
+
+async function deleteGroup(groupId: string) {
+  await fetch(`/api/messages/${groupId}?type=group`, { method: "DELETE" })
+  setGroups(prev => prev.filter(g => g.id !== groupId))
+  setSelectedGroup(null)
+  setMessages([])
+}
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -141,16 +154,43 @@ export default function ChatPage() {
           </button>
         ))}
 
-        <p className="text-xs text-muted-foreground uppercase mt-2">Grupos</p>
-        {groups.map(group => (
-          <button
-            key={group.id}
-            onClick={() => { setSelectedGroup(group); setSelectedUser(null); setMessages([]) }}
-            className={`text-left px-3 py-2 rounded-lg text-sm hover:bg-muted ${selectedGroup?.id === group.id ? "bg-muted font-medium" : ""}`}
-          >
-            {group.name}
-          </button>
-        ))}
+        <p className="text-xs text-muted-foreground uppercase mt-2">Pessoas</p>
+{users.map(user => (
+  <div key={user.id} className="flex items-center gap-1">
+    <button
+      onClick={() => { setSelectedUser(user); setSelectedGroup(null); setMessages([]) }}
+      className={`flex-1 text-left px-3 py-2 rounded-lg text-sm hover:bg-muted ${selectedUser?.id === user.id ? "bg-muted font-medium" : ""}`}
+    >
+      {user.name || user.email}
+    </button>
+    <button
+      onClick={() => deleteConversation(user.id)}
+      className="text-xs text-red-400 hover:text-red-600 px-1"
+      title="Excluir conversa"
+    >
+      ✕
+    </button>
+  </div>
+))}
+
+    <p className="text-xs text-muted-foreground uppercase mt-2">Grupos</p>
+    {groups.map(group => (
+      <div key={group.id} className="flex items-center gap-1">
+        <button
+          onClick={() => { setSelectedGroup(group); setSelectedUser(null); setMessages([]) }}
+          className={`flex-1 text-left px-3 py-2 rounded-lg text-sm hover:bg-muted ${selectedGroup?.id === group.id ? "bg-muted font-medium" : ""}`}
+        >
+          {group.name}
+        </button>
+        <button
+          onClick={() => deleteGroup(group.id)}
+          className="text-xs text-red-400 hover:text-red-600 px-1"
+          title="Excluir grupo"
+        >
+          ✕
+        </button>
+      </div>
+    ))}
 
         {showNewGroup ? (
   <div className="flex flex-col gap-2 mt-2">
