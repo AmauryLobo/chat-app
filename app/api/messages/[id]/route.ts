@@ -22,7 +22,7 @@ export async function DELETE(
       where: {
         OR: [
           { senderId: session.user?.id!, receiverId: id },
-{ senderId: id, receiverId: session.user?.id! },
+          { senderId: id, receiverId: session.user?.id! },
         ],
       },
     })
