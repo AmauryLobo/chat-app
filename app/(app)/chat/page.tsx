@@ -42,7 +42,7 @@ export default function ChatPage() {
     const roomId = selectedGroup
       ? `group_${selectedGroup.id}`
       : selectedUser
-      ? [session.user.id, selectedUser.id].sort().join("_")
+      ? [session?.user.id, selectedUser.id].sort().join("_")
       : null
 
     if (!roomId) return
@@ -83,7 +83,7 @@ export default function ChatPage() {
     const roomId = selectedGroup
       ? `group_${selectedGroup.id}`
       : selectedUser
-      ? [session.user.id, selectedUser.id].sort().join("_")
+      ? [session?.user.id, selectedUser.id].sort().join("_")
       : null
 
     if (!roomId) return
