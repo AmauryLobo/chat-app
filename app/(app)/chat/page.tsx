@@ -42,7 +42,7 @@ export default function ChatPage() {
     const roomId = selectedGroup
       ? `group_${selectedGroup.id}`
       : selectedUser
-      ? [session?.user.id, selectedUser.id].sort().join("_")
+      ? [session?.user?.id, selectedUser.id].sort().join("_")
       : null
 
     if (!roomId) return
@@ -83,7 +83,7 @@ export default function ChatPage() {
     const roomId = selectedGroup
       ? `group_${selectedGroup.id}`
       : selectedUser
-      ? [session?.user.id, selectedUser.id].sort().join("_")
+      ? [session?.user?.id, selectedUser.id].sort().join("_")
       : null
 
     if (!roomId) return
@@ -103,8 +103,8 @@ export default function ChatPage() {
     socket.emit("send_message", {
       roomId,
       message: input,
-      senderId: session.user.id,
-      senderName: session.user.name || "Usuário",
+      senderId: session?.user?.id,
+      senderName: session?.user?.name || "Usuário",
     })
 
     setInput("")
@@ -240,10 +240,10 @@ async function deleteGroup(groupId: string) {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`flex flex-col max-w-xs ${msg.senderId === session?.user.id ? "ml-auto items-end" : "items-start"}`}
+              className={`flex flex-col max-w-xs ${msg.senderId === session?.user?.id ? "ml-auto items-end" : "items-start"}`}
             >
               <span className="text-xs text-muted-foreground mb-1">{msg.senderName}</span>
-              <div className={`px-4 py-2 rounded-2xl text-sm ${msg.senderId === session?.user.id ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+              <div className={`px-4 py-2 rounded-2xl text-sm ${msg.senderId ===session?.user?.id ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
                 {msg.content}
               </div>
             </div>
