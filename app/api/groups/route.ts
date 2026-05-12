@@ -8,7 +8,7 @@ export async function GET() {
 
   const groups = await prisma.group.findMany({
     where: {
-      GroupMember: { some: { userId: session.user.id } },
+      GroupMember: { some: { userId: session.user?.id } },
     },
     include: { GroupMember: { include: { User: { select: { id: true, name: true } } } } },
   })
