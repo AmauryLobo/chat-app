@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       name,
       GroupMember: {
         create: [
-          { userId: session.user.id },
+          { userId: session.user?.id },
           ...memberIds.map((id: string) => ({ userId: id })),
         ],
       },
