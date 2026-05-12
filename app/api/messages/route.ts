@@ -4,7 +4,11 @@ import { NextResponse } from "next/server"
 
 export async function GET(req: Request) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  
+  // ✅ CORREÇÃO: Verificação completa para satisfazer o TypeScript
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  }
 
   const { searchParams } = new URL(req.url)
   const receiverId = searchParams.get("receiverId")
@@ -23,6 +27,7 @@ export async function GET(req: Request) {
     const messages = await prisma.message.findMany({
       where: {
         OR: [
+          // Agora o TS sabe que session.user.id existe com certeza
           { senderId: session.user.id, receiverId },
           { senderId: receiverId, receiverId: session.user.id },
         ],
@@ -38,14 +43,18 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  
+  // ✅ CORREÇÃO: Verificação completa também no POST
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  }
 
   const { content, receiverId, groupId } = await req.json()
 
   const message = await prisma.message.create({
     data: {
       content,
-      senderId: session.user.id,
+      senderId: session.user.id, // TS agora aceita tranquilamente
       receiverId: receiverId || null,
       groupId: groupId || null,
     },
