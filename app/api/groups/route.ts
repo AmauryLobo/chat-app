@@ -4,11 +4,16 @@ import { NextResponse } from "next/server"
 
 export async function GET() {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  
+  // ✅ CORREÇÃO 1: Garante que a sessão, o usuário e o ID existem
+  if (!session || !session.user || !session.user.id) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  }
 
   const groups = await prisma.group.findMany({
     where: {
-      GroupMember: { some: { userId: session.user?.id } },
+      // ✅ CORREÇÃO 2: Como garantimos no `if` acima, podemos remover o "?"
+      GroupMember: { some: { userId: session.user.id } },
     },
     include: { GroupMember: { include: { User: { select: { id: true, name: true } } } } },
   })
@@ -18,7 +23,11 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  
+  // ✅ CORREÇÃO 3: Mesma garantia de segurança aqui no POST
+  if (!session || !session.user || !session.user.id) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  }
 
   const { name, memberIds } = await req.json()
 
@@ -27,7 +36,8 @@ export async function POST(req: Request) {
       name,
       GroupMember: {
         create: [
-          { userId: session.user?.id },
+          // ✅ CORREÇÃO 4: Sem o "?", o TypeScript sabe que é uma string válida
+          { userId: session.user.id },
           ...memberIds.map((id: string) => ({ userId: id })),
         ],
       },
