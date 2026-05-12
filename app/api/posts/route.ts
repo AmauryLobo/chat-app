@@ -4,7 +4,11 @@ import { NextResponse } from "next/server"
 
 export async function GET() {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  
+  // ✅ CORREÇÃO: Verificação completa para garantir que o ID existe
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  }
 
   const posts = await prisma.post.findMany({
     orderBy: { createdAt: "desc" },
@@ -18,7 +22,11 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  
+  // ✅ CORREÇÃO: Verificação completa antes de criar o post
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+  }
 
   const { content } = await req.json()
 
@@ -29,7 +37,7 @@ export async function POST(req: Request) {
   const post = await prisma.post.create({
     data: {
       content,
-      authorId: session.user.id,
+      authorId: session.user.id, // Agora o TS sabe que isso é uma string
     },
     include: {
       User: { select: { id: true, name: true, email: true } },
