@@ -40,6 +40,11 @@ export default function FeedPage() {
     setLoading(false)
   }
 
+async function deletePost(postId: string) {
+  await fetch(`/api/posts/delete?postId=${postId}`, { method: "DELETE" })
+  setPosts(prev => prev.filter(p => p.id !== postId))
+}
+
   return (
     <div className="max-w-xl mx-auto py-8 px-4 flex flex-col gap-6">
       <h1 className="text-2xl font-semibold">Feed</h1>
@@ -63,25 +68,35 @@ export default function FeedPage() {
       )}
 
       {posts.map(post => (
-        <div key={post.id} className="border rounded-xl p-4 flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-medium">
-              {(post.User.name || post.User.email)[0].toUpperCase()}
-            </div>
-            <div>
-              <p className="text-sm font-medium">{post.User.name || post.User.email}</p>
-              <p className="text-xs text-muted-foreground">
-                {new Date(post.createdAt).toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "short",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </div>
-          </div>
-          <p className="text-sm">{post.content}</p>
+  <div key={post.id} className="border rounded-xl p-4 flex flex-col gap-2">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-medium">
+          {(post.User.name || post.User.email)[0].toUpperCase()}
         </div>
+        <div>
+          <p className="text-sm font-medium">{post.User.name || post.User.email}</p>
+          <p className="text-xs text-muted-foreground">
+            {new Date(post.createdAt).toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "short",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
+        </div>
+      </div>
+      {post.User.id === session?.user?.id && (
+        <button
+          onClick={() => deletePost(post.id)}
+          className="text-xs text-red-400 hover:text-red-600"
+        >
+          ✕ Excluir
+        </button>
+      )}
+    </div>
+    <p className="text-sm">{post.content}</p>
+  </div>
       ))}
     </div>
   )

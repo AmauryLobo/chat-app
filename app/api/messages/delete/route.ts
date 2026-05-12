@@ -1,0 +1,23 @@
+import { prisma } from "@/lib/prisma"
+import { auth } from "@/lib/auth"
+import { NextResponse } from "next/server"
+
+export async function DELETE(req: Request) {
+  const session = await auth()
+  if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 })
+
+  const { searchParams } = new URL(req.url)
+  const messageId = searchParams.get("messageId")
+
+  if (!messageId) return NextResponse.json({ error: "ID inválido" }, { status: 400 })
+
+  const message = await prisma.message.findUnique({ where: { id: messageId } })
+
+  if (!message || message.senderId !== session.user.id) {
+    return NextResponse.json({ error: "Sem permissão" }, { status: 403 })
+  }
+
+  await prisma.message.delete({ where: { id: messageId } })
+
+  return NextResponse.json({ success: true })
+}
