@@ -1,3 +1,7 @@
+// Configuração principal do NextAuth
+// Define a estratégia de autenticação: JWT com Credentials (email e senha)
+// O callback jwt adiciona o ID do usuário no token
+// O callback session expõe o ID do usuário para o frontend
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "./prisma"

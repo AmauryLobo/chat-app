@@ -1,3 +1,12 @@
+// Define a estrutura do banco de dados
+// User: usuários cadastrados
+// Account/Session/VerificationToken: tabelas do NextAuth
+// Group: grupos de chat
+// GroupMember: relacionamento entre usuários e grupos
+// Message: mensagens privadas e de grupo
+// Post: postagens do feed
+
+
 generator client {
   provider = "prisma-client-js"
 }

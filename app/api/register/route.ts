@@ -1,3 +1,6 @@
+// Rota de cadastro de novos usuários
+// Recebe: name, email, password
+// Valida os dados, criptografa a senha com bcrypt e salva no banco
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { NextResponse } from "next/server"

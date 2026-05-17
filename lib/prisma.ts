@@ -1,3 +1,6 @@
+// Instância global do Prisma Client
+// O padrão globalThis evita criar múltiplas conexões durante o desenvolvimento
+// Em produção, uma nova instância é criada normalmente
 import { PrismaClient } from "@prisma/client"
 
 declare global {

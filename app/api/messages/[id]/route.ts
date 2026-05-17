@@ -1,3 +1,6 @@
+// DELETE: apaga todas as mensagens de uma conversa ou exclui um grupo completo
+// O [id] é dinâmico: pode ser o ID do usuário (conversa) ou do grupo
+// O parâmetro ?type=private ou ?type=group define o que será deletado
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"

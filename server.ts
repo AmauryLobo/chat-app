@@ -1,3 +1,7 @@
+// Servidor customizado que substitui o servidor padrão do Next.js
+// Necessário para rodar o Socket.io junto com o Next.js
+// Cria salas (rooms) para conversas privadas e grupos
+// Eventos: join_room (entrar na sala) e send_message (enviar mensagem)
 import { createServer } from "http"
 import { Server } from "socket.io"
 import next from "next"

@@ -1,3 +1,5 @@
+// DELETE: apaga uma mensagem específica pelo ID
+// Só permite deletar se o usuário logado for o autor da mensagem
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
